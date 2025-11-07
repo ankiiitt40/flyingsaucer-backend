@@ -18,10 +18,11 @@ const app = express();
 // 🔹 CORS Setup
 // ======================
 const allowedOrigins = [
-  "http://localhost:5173",       // Local frontend
-  "https://yourfrontend.com",    // Deployed frontend
+  "http://localhost:5173",                             // Local frontend
+  "https://flyingsaucercafeandbarr.netlify.app",      // Deployed frontend
 ];
 
+// Use this for strict CORS checking
 app.use(cors({
   origin: function(origin, callback){
     if(!origin) return callback(null, true); // for curl, mobile apps, Postman
@@ -33,6 +34,9 @@ app.use(cors({
   credentials: true,
 }));
 
+// ======================
+// 🔹 Body parser
+// ======================
 app.use(express.json());
 
 // ======================
@@ -69,7 +73,7 @@ const transporter = nodemailer.createTransport({
 async function sendWhatsApp(to, message) {
   try {
     await twilioClient.messages.create({
-      from: "whatsapp:+14155238886", // Twilio Sandbox WhatsApp number
+      from: "whatsapp:+14155238886",
       to: `whatsapp:${to}`,
       body: message,
     });
@@ -100,7 +104,6 @@ app.get("/", (req, res) => {
   res.send("🚀 Server is running successfully!");
 });
 
-// Auth & Bookings routes
 app.use("/api/auth", authRoutes);
 app.use("/api", bookingsRoutes);
 
@@ -129,7 +132,6 @@ app.post("/api/book", async (req, res) => {
 
     const confirmationMsg = `Hi ${name}, your booking for ${date} at ${time} (${meal}) for ${guests} guests is confirmed! 🍽️`;
 
-    // Notifications
     sendWhatsApp(phone, confirmationMsg);
     sendEmail(email, "Booking Confirmation", confirmationMsg);
 
