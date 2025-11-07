@@ -13,7 +13,26 @@ import verifyToken from "./middleware/auth.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// ======================
+// 🔹 CORS Setup
+// ======================
+const allowedOrigins = [
+  "http://localhost:5173",       // Local frontend
+  "https://yourfrontend.com",    // Deployed frontend
+];
+
+app.use(cors({
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true); // for curl, mobile apps, Postman
+    if(allowedOrigins.indexOf(origin) === -1){
+      return callback(new Error("CORS policy does not allow this origin."), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+}));
+
 app.use(express.json());
 
 // ======================
