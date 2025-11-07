@@ -19,7 +19,7 @@ const app = express();
 // ======================
 const allowedOrigins = [
   "http://localhost:5173",                       // local dev
-  "https://ghjgjjgvjkjhv.netlify.app",          // your deployed frontend
+"https://flyingsaucercafeandbar1.netlify.app",          // your deployed frontend
 ];
 
 
